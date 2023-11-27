@@ -1,4 +1,4 @@
-main.d main.o: .././main.c \
+main.d main.o: .././main.c .././main.h \
  c:\vish\softwares\microchip\ studio\xc8_compiler\avr\avr\include\avr\io.h \
  c:\vish\softwares\microchip\ studio\xc8_compiler\avr\avr\include\avr\sfr_defs.h \
  c:\vish\softwares\microchip\ studio\xc8_compiler\avr\avr\include\inttypes.h \
@@ -17,6 +17,8 @@ main.d main.o: .././main.c \
  c:\vish\softwares\microchip\ studio\xc8_compiler\avr\avr\include\util\delay_basic.h \
  c:\vish\softwares\microchip\ studio\xc8_compiler\avr\avr\include\math.h \
  c:\vish\softwares\microchip\ studio\xc8_compiler\avr\avr\include\stdio.h
+
+.././main.h:
 
 c:\vish\softwares\microchip\ studio\xc8_compiler\avr\avr\include\avr\io.h:
 

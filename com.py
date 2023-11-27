@@ -7,14 +7,15 @@ ser.reset_output_buffer()
 i = 0
 time.sleep(2)
 
+print()
 print('-----TEXT BEGIN-----')
 with open("text.txt", "r") as file:
     for line in file:
         print(line, end='')
 
-print('-----TEXT END-----')
+print('-----TEXT END-------')
 print()
-print('-----CHARACTERS-----')
+print('-----CHARACTERS-----------')
 with open("text.txt", "r") as file:
     for line in file:
         for char in line:
