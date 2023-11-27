@@ -383,10 +383,10 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x0000000000000000      0xb0f
+.debug_info     0x0000000000000000      0xb14
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x0000000000000000      0x5f4 C:/VISH/Softwares/Microchip Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/xc8/avr/lib/avr5/memx-const/crtatmega328p.o
- .debug_info    0x00000000000005f4      0x51b main.o
+ .debug_info    0x00000000000005f4      0x520 main.o
 
 .debug_abbrev   0x0000000000000000      0x76a
  *(.debug_abbrev)
