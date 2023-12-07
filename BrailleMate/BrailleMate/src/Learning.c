@@ -241,14 +241,6 @@ int main(void)
 				PCICR |= (1<<PCIE0);
 				PCMSK0 |= (1<<PCINT2);
 				sei();
-				sprintf(String,"Learning Mode init\r\n");
-				UART_putstring(String);
-				sprintf(String,"LEarning Mode init\r\n");
-				UART_putstring(String);
-				sprintf(String,"LEarning Mode init\r\n");
-				UART_putstring(String);
-				sprintf(String,"Leartning Mode init\r\n");
-				UART_putstring(String);
 				eModeEx = Run;
 			}
 			else if(Run == eModeEx)
