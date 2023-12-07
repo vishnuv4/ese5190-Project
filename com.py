@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import serial
 import time
-ser = serial.Serial('COM3', baudrate=9600, stopbits=serial.STOPBITS_TWO, parity=serial.PARITY_NONE)
+ser = serial.Serial('COM4', baudrate=9600, stopbits=serial.STOPBITS_TWO, parity=serial.PARITY_NONE)
 #ser = serial.Serial('/dev/ttyS3', baudrate=9600, stopbits=serial.STOPBITS_TWO, parity=serial.PARITY_NONE)
 ser.reset_output_buffer()
 i = 0

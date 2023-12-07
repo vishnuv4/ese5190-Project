@@ -119,64 +119,137 @@ const char speaker_lookup[95] = {
 		0, //'~',
 	};
 
+char rcv;
+typedef enum
+{
+	Reading = 0,
+	Learning
+}eModeSel_E;
+
+typedef enum
+{
+	Init = 0,
+	Run  = 1	
+}eModeEx_E;
+
+eModeSel_E eModeSel = Reading;
+eModeEx_E  eModeEx = Init;
+
 
 int main(void)
 {
-    Initialize();
+    //Initialize();
+	/*Mode Sel push button*/
+	cli();
+	DDRB &= ~(1<<PORTB2);
+	PCICR |= (1<<PCIE0);
+	PCMSK0 = (1<<PCINT2);
 	char ChSel = 0;
-	char ChCount = 0;
-	int16_t offset = 0;
-	
+	uint8_t ChCount = -1;
+	int16_t offset = 0;	
+	UART_init();
+	sei();
 	while (1) // loop forever
 	{
-		if(((600 < adc_read )  && (adc_read < 1024))|| (adc_read < 400))
+		if(Reading == eModeSel)
 		{
-			offset = ((adc_read ) < 512)?-1:1;
-			adc_read  = 1024 ;//max impossible value for adc
-			if(ChSel == 1)
+			if(Init == eModeEx)
 			{
-				//print
-				if((offset < 0) && (ChCount == 0))
-				{
-					ChCount = 64;
-				}
-				ChCount += offset; 
-				if(offset > 0)
-				{
-					//sprintf(String,"Next Character\n");
-					//UART_SendData(String);
-				}
-				else
-				{
-					//sprintf(String,"Prev Character\n");
-					//UART_SendData(String);
-				}
-				OCR2A = 70;
-				_delay_ms(500);
-				OCR2A = 0;
-			}
-			else
-			{
-				ChSel = 1;
-				//sprintf(String,"Character sel started\n");
-				//UART_SendData(String);
-			}
-		}
-		if((400 < adc_read) && (adc_read < 600))
-		{
-			if(ChSel)
-			{
+				Initialize();
 				ChSel = 0;
-				ChCount = ChCount%64;
-				if(ChCount >= 12 && ChCount <= 16)
+				ChCount = -1;
+				offset = 0;
+				eModeEx = Run;
+				sprintf(String,"Reading Mode init\r\n");
+				UART_putstring(String);
+				sprintf(String,"Reading Mode init\r\n");
+				UART_putstring(String);
+				sprintf(String,"Reading Mode init\r\n");
+				UART_putstring(String);
+				sprintf(String,"Reading Mode init\r\n");
+				UART_putstring(String);
+			}
+			else  if(Run == eModeEx)
+			{
+				//sprintf(String,"Reading Mode running mode\r\n");
+				//UART_putstring(String);
+				if(((600 < adc_read )  && (adc_read < 1024))|| (adc_read < 400))
 				{
-					ChCount = (ChCount - 12) + 11;
+					offset = ((adc_read ) < 512)?-1:1;
+					adc_read  = 1024 ;//max impossible value for adc
+					if(ChSel == 1)
+					{
+						//print
+						if((offset < 0) && (ChCount == 0))
+						{
+							ChCount = 36;
+						}
+						ChCount += offset;
+						if(offset > 0)
+						{
+							//sprintf(String,"Next Character\n");
+							//UART_SendData(String);
+						}
+						else
+						{
+							//sprintf(String,"Prev Character\n");
+							//UART_SendData(String);
+						}
+						OCR2A = 70;
+						_delay_ms(500);
+						OCR2A = 0;
+					}
+					else
+					{
+						ChSel = 1;
+						//sprintf(String,"Character sel started\n");
+						//UART_SendData(String);
+					}
 				}
-				//sprintf(String,"INPUT READ = %c ch count = %d\n",char_value[ChCount],ChCount);
-				//UART_SendData(String);
-				PORTD = char_lookup[ChCount];
-				/*speaker play module*/
-				speaker_play(speaker_lookup[char_value[ChCount] - ' ']);
+				if((400 < adc_read) && (adc_read < 600))
+				{
+					if(ChSel)
+					{
+						ChSel = 0;
+						ChCount = ChCount%36;
+						//sprintf(String,"INPUT READ = %c ch count = %d\n",char_value[ChCount],ChCount);
+						//UART_SendData(String);
+						PORTD = char_lookup[ChCount];
+						/*speaker play module*/
+						speaker_play(speaker_lookup[char_value[ChCount] - ' ']);
+					}
+				}
+			}
+		}		
+		else if(Learning == eModeSel)
+		{
+			//sprintf(String,"Learning Mode\n");
+			//UART_putstring(String);
+			if(Init == eModeEx)
+			{
+				
+				cli();
+				//UART_init();
+				DDRB |= (1<<PORTB5);
+				DDRB |= (1<<PORTD2) | (1<<PORTD3) | (1<<PORTD4) | (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7);
+				TCCR1B |= (1<<ICES1) | (1<<ICNC1);
+				TIMSK1 |= (1<<ICIE1);
+				sei();
+				sprintf(String,"Reading Mode init\r\n");
+				UART_putstring(String);
+				sprintf(String,"Reading Mode init\r\n");
+				UART_putstring(String);
+				sprintf(String,"Reading Mode init\r\n");
+				UART_putstring(String);
+				sprintf(String,"Reading Mode init\r\n");
+				UART_putstring(String);
+				eModeEx = Run;
+			}
+			else if(Run == eModeEx)
+			{
+				/**/
+				//sprintf(String,"Learning Mode run\r\n");
+				//UART_putstring(String);
 			}
 		}
 	}
@@ -187,7 +260,7 @@ void Initialize(void)
 {
     //disable interrupt
 	cli();
-	UART_init();
+	//UART_init();
 	DDRD |= (1<<PORTD2) | (1<<PORTD3) | (1<<PORTD4) | (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7);
 	TimerInit();
 	ADC_Init();
@@ -243,9 +316,42 @@ ISR(ADC_vect)
 	//UART_SendData(String);
 }
 
+
+
+ISR(USART_RX_vect)
+{
+	rcv = UDR0;
+	PORTD = char_lookup_read[rcv-' '];
+}
+
+ISR(TIMER1_CAPT_vect)
+{
+	UART_send('n');
+	_delay_ms(50);
+}
+
+
 ISR(TIMER1_COMPB_vect)
 {
 	
+}
+
+ISR(PCINT2_vect)
+{
+	sprintf(String,"Mode Change request\r\n");
+	UART_putstring(String);
+	sprintf(String,"Mode Change request\r\n");
+	UART_putstring(String);
+	sprintf(String,"Mode Change request\r\n");
+	UART_putstring(String);
+	if(!(PINB & (1 << PB2)))
+	{		
+		eModeSel ^= 1;
+		eModeEx = Init;
+		sprintf(String,"Mode Change= %d\r\n",eModeSel);
+		UART_putstring(String);
+	}
+	_delay_ms(500);
 }
 
 

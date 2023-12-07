@@ -6,7 +6,7 @@
 #include <util/delay.h>
 
 void speaker_play(uint8_t file);
-void speaker_begin();
+void speaker_begin(void);
 
 #define DFPLAYER_EQ_NORMAL 0
 #define DFPLAYER_EQ_POP 1

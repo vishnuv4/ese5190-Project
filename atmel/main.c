@@ -29,7 +29,7 @@ void init()
 	cli();
 	UART_init();
 	DDRB |= (1<<PORTB5);
-	DDRB |= (1<<PORTD2) | (1<<PORTD3) | (1<<PORTD4) | (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7);
+	DDRD |= (1<<PORTD2) | (1<<PORTD3) | (1<<PORTD4) | (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7);
 	TCCR1B |= (1<<ICES1) | (1<<ICNC1);
 	TIMSK1 |= (1<<ICIE1);
 	sei();	
