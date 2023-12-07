@@ -19,6 +19,7 @@
 #include <stdio.h>
 
 extern const char char_lookup[95];
+extern const char speaker_lookup[95];
 
 void UART_init();
 void UART_send(unsigned char data);

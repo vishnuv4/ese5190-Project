@@ -39,6 +39,7 @@ SUBDIRS :=
 C_SRCS +=  \
 ../lookup.c \
 ../main.c \
+../speaker.c \
 ../uart.c
 
 
@@ -51,21 +52,25 @@ ASM_SRCS +=
 OBJS +=  \
 lookup.o \
 main.o \
+speaker.o \
 uart.o
 
 OBJS_AS_ARGS +=  \
 lookup.o \
 main.o \
+speaker.o \
 uart.o
 
 C_DEPS +=  \
 lookup.d \
 main.d \
+speaker.d \
 uart.d
 
 C_DEPS_AS_ARGS +=  \
 lookup.d \
 main.d \
+speaker.d \
 uart.d
 
 OUTPUT_FILE_PATH +=atmel.elf
@@ -90,6 +95,13 @@ LINKER_SCRIPT_DEP+=
 	
 
 ./main.o: .././main.c
+	@echo Building file: $<
+	@echo Invoking: XC8 C Compiler : 2.36
+	$(QUOTE)C:\VISH\Softwares\Microchip Studio\xc8_compiler\bin\xc8-cc.exe$(QUOTE)  -mcpu=ATmega328P  -mdfp="C:\VISH\Softwares\Microchip Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\xc8"  -c -x c -funsigned-char -funsigned-bitfields -mext=cci -D__ATmega328P__ -DDEBUG  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./speaker.o: .././speaker.c
 	@echo Building file: $<
 	@echo Invoking: XC8 C Compiler : 2.36
 	$(QUOTE)C:\VISH\Softwares\Microchip Studio\xc8_compiler\bin\xc8-cc.exe$(QUOTE)  -mcpu=ATmega328P  -mdfp="C:\VISH\Softwares\Microchip Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\xc8"  -c -x c -funsigned-char -funsigned-bitfields -mext=cci -D__ATmega328P__ -DDEBUG  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

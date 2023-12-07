@@ -6,5 +6,7 @@ lookup.c
 
 main.c
 
+speaker.c
+
 uart.c
 

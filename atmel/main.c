@@ -4,7 +4,11 @@
  * Created: 11/23/2023 2:28:37 PM
  *  Author: vishn
  */ 
+#include "speaker.h"
 #include "main.h"
+
+#define rxPin 10
+#define txPin 11
 
 char rcv;
 
@@ -36,8 +40,18 @@ int flag=1;
 int main(void)
 {
 	init();
+    speaker_begin();
 	_delay_ms(1000);
+    uint8_t filenum=1;
+
+    //0 - reading, 1 - learning
+    int mode = 0;
+
     while(1)
     {
+//        speaker_play(speaker_lookup['0' - ' ']);
+//        filenum += 1;
+//        filenum = filenum%36;
+//        _delay_ms(3000);
 	}
 }
