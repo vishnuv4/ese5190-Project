@@ -129,58 +129,56 @@ int main(void)
 	
 	while (1) // loop forever
 	{
-		speaker_play(speaker_lookup['f'-' ']);
-		_delay_ms(10000);
-		// if(((600 < adc_read )  && (adc_read < 1024))|| (adc_read < 400))
-		// {
-		// 	offset = ((adc_read ) < 512)?-1:1;
-		// 	adc_read  = 1024 ;//max impossible value for adc
-		// 	if(ChSel == 1)
-		// 	{
-		// 		//print
-		// 		if((offset < 0) && (ChCount == 0))
-		// 		{
-		// 			ChCount = 64;
-		// 		}
-		// 		ChCount += offset; 
-		// 		if(offset > 0)
-		// 		{
-		// 			//sprintf(String,"Next Character\n");
-		// 			//UART_SendData(String);
-		// 		}
-		// 		else
-		// 		{
-		// 			//sprintf(String,"Prev Character\n");
-		// 			//UART_SendData(String);
-		// 		}
-		// 		OCR2A = 70;
-		// 		_delay_ms(1000);
-		// 		OCR2A = 0;
-		// 	}
-		// 	else
-		// 	{
-		// 		ChSel = 1;
-		// 		//sprintf(String,"Character sel started\n");
-		// 		//UART_SendData(String);
-		// 	}
-		// }
-		// if((400 < adc_read) && (adc_read < 600))
-		// {
-		// 	if(ChSel)
-		// 	{
-		// 		ChSel = 0;
-		// 		ChCount = ChCount%64;
-		// 		if(ChCount >= 12 && ChCount <= 16)
-		// 		{
-		// 			ChCount = (ChCount - 12) + 11;
-		// 		}
-		// 		//sprintf(String,"INPUT READ = %c ch count = %d\n",char_value[ChCount],ChCount);
-		// 		//UART_SendData(String);
-		// 		PORTD = char_lookup[ChCount];
-		// 		/*speaker play module*/
-		// 		speaker_play(char_value[ChCount] - ' ');
-		// 	}
-		// }
+		if(((600 < adc_read )  && (adc_read < 1024))|| (adc_read < 400))
+		{
+			offset = ((adc_read ) < 512)?-1:1;
+			adc_read  = 1024 ;//max impossible value for adc
+			if(ChSel == 1)
+			{
+				//print
+				if((offset < 0) && (ChCount == 0))
+				{
+					ChCount = 64;
+				}
+				ChCount += offset; 
+				if(offset > 0)
+				{
+					//sprintf(String,"Next Character\n");
+					//UART_SendData(String);
+				}
+				else
+				{
+					//sprintf(String,"Prev Character\n");
+					//UART_SendData(String);
+				}
+				OCR2A = 70;
+				_delay_ms(500);
+				OCR2A = 0;
+			}
+			else
+			{
+				ChSel = 1;
+				//sprintf(String,"Character sel started\n");
+				//UART_SendData(String);
+			}
+		}
+		if((400 < adc_read) && (adc_read < 600))
+		{
+			if(ChSel)
+			{
+				ChSel = 0;
+				ChCount = ChCount%64;
+				if(ChCount >= 12 && ChCount <= 16)
+				{
+					ChCount = (ChCount - 12) + 11;
+				}
+				//sprintf(String,"INPUT READ = %c ch count = %d\n",char_value[ChCount],ChCount);
+				//UART_SendData(String);
+				PORTD = char_lookup[ChCount];
+				/*speaker play module*/
+				speaker_play(speaker_lookup[char_value[ChCount] - ' ']);
+			}
+		}
 	}
 }
 
@@ -190,10 +188,10 @@ void Initialize(void)
     //disable interrupt
 	cli();
 	UART_init();
-	//DDRD |= (1<<PORTD2) | (1<<PORTD3) | (1<<PORTD4) | (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7);
-	//TimerInit();
-	//ADC_Init();
-	//Buzzer_PWMInit();
+	DDRD |= (1<<PORTD2) | (1<<PORTD3) | (1<<PORTD4) | (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7);
+	TimerInit();
+	ADC_Init();
+	Buzzer_PWMInit();
 	speaker_begin();
 	_delay_ms(1000);
 	sei();
