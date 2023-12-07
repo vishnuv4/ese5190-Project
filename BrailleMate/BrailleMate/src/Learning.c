@@ -157,14 +157,14 @@ int main(void)
 		{
 			if(Init == eModeEx)
 			{
-				sprintf(String,"Reading Mode init\r\n");
-				UART_putstring(String);
-				sprintf(String,"Reading Mode init\r\n");
-				UART_putstring(String);
-				sprintf(String,"Reading Mode init\r\n");
-				UART_putstring(String);
-				sprintf(String,"Reading Mode init\r\n");
-				UART_putstring(String);
+				// sprintf(String,"Reading Mode init\r\n");
+				// UART_putstring(String);
+				// sprintf(String,"Reading Mode init\r\n");
+				// UART_putstring(String);
+				// sprintf(String,"Reading Mode init\r\n");
+				// UART_putstring(String);
+				// sprintf(String,"Reading Mode init\r\n");
+				// UART_putstring(String);
 				Initialize();
 				ChSel = 0;
 				ChCount = -1;
@@ -185,7 +185,7 @@ int main(void)
 						//print
 						if((offset < 0) && (ChCount == 0))
 						{
-							ChCount = 36;
+							ChCount = 36;//26 alphabets+10numbers
 						}
 						ChCount += offset;
 						if(offset > 0)
@@ -234,13 +234,22 @@ int main(void)
 				cli();
 				//UART_init();
 				DDRB |= (1<<PORTB5);
-				DDRB |= (1<<PORTD2) | (1<<PORTD3) | (1<<PORTD4) | (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7);
+				DDRD |= (1<<PORTD2) | (1<<PORTD3) | (1<<PORTD4) | (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7);
+				// PORTD |= (1<<PORTD2) | (1<<PORTD3) | (1<<PORTD4) | (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7);
 				TCCR1B |= (1<<ICES1) | (1<<ICNC1);
 				TIMSK1 |= (1<<ICIE1);
 				DDRB &= ~(1<<PORTB2);
 				PCICR |= (1<<PCIE0);
 				PCMSK0 |= (1<<PCINT2);
 				sei();
+				// sprintf(String,"Learning Mode init\r\n");
+				// UART_putstring(String);
+				// sprintf(String,"LEarning Mode init\r\n");
+				// UART_putstring(String);
+				// sprintf(String,"LEarning Mode init\r\n");
+				// UART_putstring(String);
+				// sprintf(String,"Leartning Mode init\r\n");
+				// UART_putstring(String);
 				eModeEx = Run;
 			}
 			else if(Run == eModeEx)
@@ -342,14 +351,14 @@ ISR(PCINT0_vect)
 	PCMSK0 &= ~(1<<PCINT2);
 	//sprintf(String,"Mode Change request =\r\n");
 	//UART_putstring(String);
-	if(!( PINB & (1<<PB2)))
+	if(( PINB & (1<<PB2)))
 	{		
 		if(eModeEx == Run)
 		{
 			eModeSel ^= 1;
 			eModeEx = Init;
-			sprintf(String,"Mode Change= %d\r\n",eModeSel);
-			UART_putstring(String);
+			//sprintf(String,"Mode Change= %d\r\n",eModeSel);
+			//UART_putstring(String);
 		}
 	}
 	 _delay_ms(1000);       
