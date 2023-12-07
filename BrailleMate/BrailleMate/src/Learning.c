@@ -143,7 +143,7 @@ int main(void)
 	cli();
 	DDRB &= ~(1<<PORTB2);
 	PCICR |= (1<<PCIE0);
-	PCMSK0 = (1<<PCINT2);
+	PCMSK0 |= (1<<PCINT2);
 	char ChSel = 0;
 	uint8_t ChCount = -1;
 	int16_t offset = 0;	
@@ -151,23 +151,26 @@ int main(void)
 	sei();
 	while (1) // loop forever
 	{
-		if(Reading == eModeSel)
+		//sprintf(String,"Mode selected%d\r\n",eModeSel);
+		//UART_putstring(String);
+		if(Learning == eModeSel)
 		{
 			if(Init == eModeEx)
 			{
+				sprintf(String,"Reading Mode init\r\n");
+				UART_putstring(String);
+				sprintf(String,"Reading Mode init\r\n");
+				UART_putstring(String);
+				sprintf(String,"Reading Mode init\r\n");
+				UART_putstring(String);
+				sprintf(String,"Reading Mode init\r\n");
+				UART_putstring(String);
 				Initialize();
 				ChSel = 0;
 				ChCount = -1;
 				offset = 0;
 				eModeEx = Run;
-				sprintf(String,"Reading Mode init\r\n");
-				UART_putstring(String);
-				sprintf(String,"Reading Mode init\r\n");
-				UART_putstring(String);
-				sprintf(String,"Reading Mode init\r\n");
-				UART_putstring(String);
-				sprintf(String,"Reading Mode init\r\n");
-				UART_putstring(String);
+				
 			}
 			else  if(Run == eModeEx)
 			{
@@ -221,7 +224,7 @@ int main(void)
 				}
 			}
 		}		
-		else if(Learning == eModeSel)
+		else if(Reading == eModeSel)
 		{
 			//sprintf(String,"Learning Mode\n");
 			//UART_putstring(String);
@@ -234,14 +237,17 @@ int main(void)
 				DDRB |= (1<<PORTD2) | (1<<PORTD3) | (1<<PORTD4) | (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7);
 				TCCR1B |= (1<<ICES1) | (1<<ICNC1);
 				TIMSK1 |= (1<<ICIE1);
+				DDRB &= ~(1<<PORTB2);
+				PCICR |= (1<<PCIE0);
+				PCMSK0 |= (1<<PCINT2);
 				sei();
-				sprintf(String,"Reading Mode init\r\n");
+				sprintf(String,"Learning Mode init\r\n");
 				UART_putstring(String);
-				sprintf(String,"Reading Mode init\r\n");
+				sprintf(String,"LEarning Mode init\r\n");
 				UART_putstring(String);
-				sprintf(String,"Reading Mode init\r\n");
+				sprintf(String,"LEarning Mode init\r\n");
 				UART_putstring(String);
-				sprintf(String,"Reading Mode init\r\n");
+				sprintf(String,"Leartning Mode init\r\n");
 				UART_putstring(String);
 				eModeEx = Run;
 			}
@@ -262,6 +268,9 @@ void Initialize(void)
 	cli();
 	//UART_init();
 	DDRD |= (1<<PORTD2) | (1<<PORTD3) | (1<<PORTD4) | (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7);
+	DDRB &= ~(1<<PORTB2);
+	PCICR |= (1<<PCIE0);
+	PCMSK0 |= (1<<PCINT2);
 	TimerInit();
 	ADC_Init();
 	Buzzer_PWMInit();
@@ -336,22 +345,23 @@ ISR(TIMER1_COMPB_vect)
 	
 }
 
-ISR(PCINT2_vect)
+ISR(PCINT0_vect)
 {
-	sprintf(String,"Mode Change request\r\n");
-	UART_putstring(String);
-	sprintf(String,"Mode Change request\r\n");
-	UART_putstring(String);
-	sprintf(String,"Mode Change request\r\n");
-	UART_putstring(String);
-	if(!(PINB & (1 << PB2)))
+	PCMSK0 &= ~(1<<PCINT2);
+	//sprintf(String,"Mode Change request =\r\n");
+	//UART_putstring(String);
+	if(!( PINB & (1<<PB2)))
 	{		
-		eModeSel ^= 1;
-		eModeEx = Init;
-		sprintf(String,"Mode Change= %d\r\n",eModeSel);
-		UART_putstring(String);
+		if(eModeEx == Run)
+		{
+			eModeSel ^= 1;
+			eModeEx = Init;
+			sprintf(String,"Mode Change= %d\r\n",eModeSel);
+			UART_putstring(String);
+		}
 	}
-	_delay_ms(500);
+	 _delay_ms(1000);       
+	 PCMSK0 |= (1<<PCINT2);                                                                                                                                                                            
 }
 
 
